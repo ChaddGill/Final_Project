@@ -1,0 +1,28 @@
+package com.promineotechtimefinal.time.controller;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+import com.promineotechtimefinal.time.entity.Employee;
+import com.promineotechtimefinal.time.entity.Schedule;
+import com.promineotechtimefinal.time.service.TimeCardService;
+import lombok.extern.slf4j.Slf4j;
+
+
+@RestController
+@Slf4j
+public class DefaultTimeCardController implements TimeCardController {
+
+  @Autowired
+  private TimeCardService timeCardService;
+  
+  @Override
+  public Schedule saveSchedule(Employee employee, String clockDate,
+      String clockTime) {
+    log.debug("Employee= {}", employee, "ClockDate= {}", clockDate, "ClockTime = {}", clockTime);
+    return timeCardService.saveSchedule(employee, clockDate, clockTime);  
+    }
+}

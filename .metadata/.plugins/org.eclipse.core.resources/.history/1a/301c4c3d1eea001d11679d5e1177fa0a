@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 @Validated  
-@RequestMapping("/time")
+@RequestMapping("/timecard")
 @OpenAPIDefinition(info = @Info(title = "Time Card Service"), servers = {
     @Server(url = "http://localhost:8080", description = "Local server.")})
 public interface TimeCardController {
@@ -31,7 +31,7 @@ public interface TimeCardController {
     responses = {
         @ApiResponse (
             responseCode = "201", 
-            description = "The time stamp is saved", 
+            description = "The time punch is saved", 
             content = @Content(
                 mediaType = "application/json", 
                 schema = @Schema(implementation = PunchSchedule.class))),
@@ -60,6 +60,5 @@ public interface TimeCardController {
   
 @PostMapping
 @ResponseStatus(code = HttpStatus.CREATED)
-Schedule saveSchedule(Employee employee, LocalDate clockDate, LocalTime clockTime);
-  
+Schedule saveSchedule(Employee employee, LocalDate clockDate, LocalTime clockTime);  
 }

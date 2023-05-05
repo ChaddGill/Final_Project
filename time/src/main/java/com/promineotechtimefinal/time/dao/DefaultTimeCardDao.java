@@ -3,6 +3,7 @@ package com.promineotechtimefinal.time.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -31,22 +32,20 @@ public class DefaultTimeCardDao implements TimeCardDao {
 
   // removed correction--add later
   @Override
-  public Schedule saveSchedule(Employee employee, LocalDate clockDate,
-      LocalTime clockTime) {
-    SqlParams params = generateInsertSql(employee, clockDate, clockTime);
+  public Schedule saveSchedule(Long employeeID) {
+    SqlParams params = generateInsertSql(employeeID);
 
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(params.sql, params.source, keyHolder);
-    clockTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
-    clockDate = LocalDate.now();
+   // clockTime = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
+   LocalDateTime clockDateTime = LocalDateTime.now();
 
     Long scheduleID = keyHolder.getKey().longValue();
 //@formatter:off
     return Schedule.builder()
         .scheduleID(scheduleID)
-        .employee(employee)
-        .clockDate(clockDate)
-        .clockTime(clockTime)
+        .employeeID(employeeID)
+        .clockDateTime(clockDateTime)
         .build();
 //@formatter:on
   }
@@ -78,19 +77,21 @@ public class DefaultTimeCardDao implements TimeCardDao {
     return params;
   }
   
-  private SqlParams generateInsertSql(Employee employee, LocalDate clockDate, LocalTime clockTime) {
+  private SqlParams generateInsertSql(Long employeeID) {
     SqlParams params = new SqlParams();
 
     //@formatter:off
     params.sql = "" 
-        + "INSERT INTO Schedule ("
-        + "employee, clockDate, clockTime"
+        + "INSERT INTO schedule ("
+        + "employeeID, clockDateTime"
         + ") VALUES ("
-        + ":employee, :clockDate, :clockTime"
+        + ":employeeID, :clockDateTime"
         + ")";
       
     //@formatter:on
-    params.source.addValue("employee", employee);
+    params.source.addValue("employeeID", employeeID);
+    LocalDateTime clockDateTime = LocalDateTime.now();
+	params.source.addValue("clockDateTime", clockDateTime);
 
     return params;
   }
@@ -113,9 +114,9 @@ public class DefaultTimeCardDao implements TimeCardDao {
   }
 
   // round clock time to nearest quarter hour
-  public double diffToNearestQuarter(LocalTime time1, LocalTime time2) {
+  public double diffToNearestQuarter(LocalDateTime inTime, LocalDateTime outTime) {
 
-    long timeDifference = time1.until(time2, ChronoUnit.MINUTES);
+    long timeDifference = inTime.until(outTime, ChronoUnit.MINUTES);
     int hours = (int) (timeDifference / 60);
     int time = (int) (timeDifference % 60);
     int remainder = time % 15;
@@ -143,14 +144,14 @@ public class DefaultTimeCardDao implements TimeCardDao {
 
 
   // Find Sunday as the start of the pay period
-  private LocalDate findSunday(LocalDate ppClock) {
-    LocalDate ppFirst = ppClock.with(WeekFields.of(Locale.US).dayOfWeek(), 1L);
+  private LocalDateTime findSunday(LocalDateTime ppDate) {
+    LocalDateTime ppFirst = ppDate.with(WeekFields.of(Locale.US).dayOfWeek(), 1L);
     return ppFirst;
 
   }
 
-  private LocalDate findSaturday(LocalDate ppClock) {
-    LocalDate ppLast = ppClock.with(WeekFields.of(Locale.US).dayOfWeek(), 7L);
+  private LocalDateTime findSaturday(LocalDateTime ppClock) {
+    LocalDateTime ppLast = ppClock.with(WeekFields.of(Locale.US).dayOfWeek(), 7L);
     return ppLast;
   }
 
@@ -161,26 +162,26 @@ public class DefaultTimeCardDao implements TimeCardDao {
   // and add totals through the end of the time period; Otherwise, missed stamp
   // must start with clock in
   @Override
-  public void fetchTimes(Employee employee, List<Schedule> Schedule,
-      LocalDate ppDate) {
-    LocalTime inTime = null;
-    LocalTime outTime = null;
+  public void fetchTimes(Long employeeID, List<Schedule> Schedule,
+      LocalDateTime ppDate) {
+    LocalDateTime inTime = null;
+    LocalDateTime outTime = null;
     double tcTotal = 0;
 
     for (Schedule times : Schedule) {
-      if (times.getClockDate().isAfter(findSunday(ppDate))
-          && times.getClockDate().isBefore(findSaturday(ppDate))) {
-        while (times.getEmployee().equals(employee)) {
+      if (times.getClockDateTime().isAfter(findSunday(ppDate))
+          && times.getClockDateTime().isBefore(findSaturday(ppDate))) {
+        while (times.getEmployeeID().equals(employeeID)) {
   
           if (times.getPunch().equals(PunchChoice.IN)) {
-            inTime = times.getClockTime();
-          } else if (times.getPunch().equals(PunchChoice.OUT)) {
-            outTime = times.getClockTime();
+            inTime = times.getClockDateTime();
+         } else if (times.getPunch().equals(PunchChoice.OUT)) {
+            outTime = times.getClockDateTime();
           }
           tcTotal += diffToNearestQuarter(inTime, outTime);
         }
         System.out.println("For the payperiod starting " + findSunday(ppDate)
-            + " the total hours worked are " + tcTotal + " for the employee " + employee);
+            + " the total hours worked are " + tcTotal + " for the employee " + employeeID);
       }
     }
   }

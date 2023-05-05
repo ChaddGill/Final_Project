@@ -31,7 +31,7 @@ public interface TimeCardController {
     responses = {
         @ApiResponse (
             responseCode = "201", 
-            description = "The time stamp is saved", 
+            description = "The time punch is saved", 
             content = @Content(
                 mediaType = "application/json", 
                 schema = @Schema(implementation = PunchSchedule.class))),
@@ -50,15 +50,15 @@ public interface TimeCardController {
     },
 //build more into this section  
     parameters = {
-       @Parameter(
-           name = "timeCardRequest",
-           required = true,
-           description = "The order as JSON")
+      // @Parameter(
+          // name = "timeCardRequest",
+          // required = true,
+          // description = "The order as JSON")
     }
     
     )
   
 @PostMapping
 @ResponseStatus(code = HttpStatus.CREATED)
-Schedule saveSchedule(Employee employee, LocalDate clockDate, LocalTime clockTime);  
+Schedule saveSchedule(Long employeeID);  
 }

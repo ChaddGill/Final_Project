@@ -1,7 +1,9 @@
 package com.promineotechtimefinal.time.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +21,11 @@ public class DefaultTimeCardController implements TimeCardController {
   private TimeCardService timeCardService;
   
   @Override
-  public Schedule saveSchedule(@Valid Employee employee, LocalDate clockDate,
-      LocalTime clockTime) {
-    log.debug("Employee= {}", employee, "ClockDate= {}", clockDate, "ClockTime = {}", clockTime);
-    return timeCardService.saveSchedule(employee, clockDate, clockTime);  
+  public Schedule saveSchedule(Long employeeID) {
+    log.debug("Employee= {}", employeeID);
+//    DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//    LocalDateTime dateTime = LocalDateTime.parse(clockDateTime, formatDate);
+   
+    return timeCardService.saveSchedule(employeeID);  
     }
 }

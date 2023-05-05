@@ -1,0 +1,13 @@
+package com.promineotechtimefinal.time.entity;
+
+import java.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.databind.JsonSerializer;
+
+public class LocalDateTimeSerializer extends JsonSerializer<?> {
+
+	public LocalDateTimeSerializer(DateTimeFormatter ofPattern) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

@@ -1,0 +1,7 @@
+package com.promineotechtimefinal.time.entity;
+
+import com.fasterxml.jackson.databind.JsonSerializer;
+
+public class LocalDateSerializer extends JsonSerializer<?> {
+
+}

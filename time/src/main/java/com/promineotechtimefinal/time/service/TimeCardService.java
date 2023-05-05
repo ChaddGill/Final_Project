@@ -1,6 +1,7 @@
 package com.promineotechtimefinal.time.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import com.promineotechtimefinal.time.entity.Employee;
@@ -11,11 +12,11 @@ import com.promineotechtimefinal.time.entity.Schedule;
 public interface TimeCardService {
 
 
-  Schedule saveSchedule(Employee employee, LocalDate clockDate, LocalTime clockTime);
+  Schedule saveSchedule(Long employeeID);
 
   void savePunch(List<Punch> punchChoices, Long scheduleID);
 
   Punch fetchpunch(Punch punch);
 
-  void fetchTimes(Employee employee, List<Schedule> Schedule, LocalDate ppDate);
+  void fetchTimes(Long employeeID, List<Schedule> Schedule, LocalDateTime ppDate);
 }

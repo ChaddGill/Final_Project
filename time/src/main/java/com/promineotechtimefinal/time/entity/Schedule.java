@@ -1,6 +1,7 @@
 package com.promineotechtimefinal.time.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,11 +14,11 @@ import lombok.Data;
 public class Schedule {
   
   private Long scheduleID;
-  private Employee employee;
-  private LocalDate clockDate;
-  private LocalTime clockTime;
+  private Long employeeID;
+  private LocalDateTime clockDateTime;
+ // private LocalTime clockTime;
   private List<Punch> punch;
-
+  
   
   @JsonIgnore
   public Long getScheduleID() {

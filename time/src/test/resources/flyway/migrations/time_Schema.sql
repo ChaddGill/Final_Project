@@ -21,8 +21,7 @@ CREATE TABLE punch (
 CREATE TABLE schedule (
   scheduleID int unsigned NOT NULL AUTO_INCREMENT,
   employeeID int unsigned NOT NULL,
-  clockDate DATE NOT NULL,
-  clockTime TIME(0) NOT NULL,
+  clockDateTime DATETIME NOT NULL ON UPDATE CURRENT_TIMESTAMP default CURRENT_TIMESTAMP,
   constraint schedule_scheduleID_pk primary key (scheduleID),
   constraint schedule_scheduleID_fk FOREIGN KEY (employeeID) REFERENCES employee (employeeID) ON DELETE CASCADE
   );
@@ -33,4 +32,3 @@ CREATE TABLE punchSchedule (
   constraint punchSchedule_scheduleID_fk FOREIGN KEY (scheduleID) REFERENCES schedule (scheduleID) ON DELETE CASCADE,
   constraint punchSchedule_punchID_fk foreign key (punchID) REFERENCES punch (punchID) ON DELETE CASCADE
   );
-);
