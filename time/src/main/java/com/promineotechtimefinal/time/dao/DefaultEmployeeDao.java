@@ -124,5 +124,4 @@ public class DefaultEmployeeDao implements EmployeeDao {
           .build();
       //@formatter:on
   }
-
 }

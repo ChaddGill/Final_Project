@@ -1,0 +1,20 @@
+package com.promineotechtimefinal.time.service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import com.promineotechtimefinal.time.entity.Punch;
+import com.promineotechtimefinal.time.entity.PunchChoice;
+import com.promineotechtimefinal.time.entity.Schedule;
+
+
+public interface TimeCardService {
+
+
+  Schedule saveSchedule(Long employeeID);
+
+  PunchChoice savePunch(List<Punch> punchChoices, Long scheduleID);
+
+  Punch fetchpunch(Punch punch);
+
+  void fetchTimes(Long employeeID, List<Schedule> Schedule, LocalDateTime ppDate);
+}

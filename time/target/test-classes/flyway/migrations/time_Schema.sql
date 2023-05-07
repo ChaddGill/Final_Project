@@ -14,7 +14,7 @@ CREATE TABLE employee (
 
 CREATE TABLE punch (
   punchID int unsigned NOT NULL AUTO_INCREMENT,
-  punchChoice enum ('IN', 'OUT'),
+  punchChoice enum ('IN', 'OUT') NOT NULL,
   constraint punch_punchID_pk primary key (punchID)
   );
 
